@@ -1,0 +1,6 @@
+django==1.11
+djangorestframework
+markdown
+django-filter
+django-rest-framework-mongoengine
+
