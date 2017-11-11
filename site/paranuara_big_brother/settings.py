@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import sys
+import mongoengine
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -56,7 +58,7 @@ ROOT_URLCONF = 'paranuara_big_brother.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -82,6 +84,22 @@ DATABASES = {
     }
 }
 
+# We define 2 Mongo databases - default and test
+MONGODB_DATABASES = {
+    "default": {
+        "name": "project",
+        "host": "localhost",
+        "port": 27017,
+        "tz_aware": True,
+    },
+
+    "test": {
+        "name": "test_project",
+        "host": "localhost",
+        "port": 27017,
+        "tz_aware": True,
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -120,3 +138,32 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+
+def is_test():
+    """
+    Checks, if we're running the server for real or in unit-test.
+
+    We might need a better implementation of this function.
+    """
+    if 'test' in sys.argv or 'testserver' in sys.argv:
+        print("Using a test mongo database")
+        return True
+    else:
+        print("Using a default mongo database")
+        return False
+
+if is_test():
+    db = 'test'
+else:
+    db = 'default'
+
+
+# establish connection with default or test database, depending on the management command, being run
+# note that this connection syntax is correct for mongoengine0.9-, but mongoengine0.10+ introduced slight changes
+mongoengine.connect(
+    db=MONGODB_DATABASES[db]['name'],
+    host=MONGODB_DATABASES[db]['host']
+)
+

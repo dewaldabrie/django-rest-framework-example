@@ -72,6 +72,7 @@ class HybridRouter(routers.DefaultRouter):
                 for api_view_key in api_view_urls.keys():
                     # originally was: reverse(api_view_urls[api_view_key].name, request=request, format=format)
                     namespace = request.resolver_match.namespace
+                    url_name = api_view_key
                     if namespace:
                         url_name = namespace + ":" + api_view_key
                     try:
