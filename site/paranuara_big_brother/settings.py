@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'rest_framework_mongoengine'
+    'rest_framework_mongoengine',
+    'info',
 ]
 
 MIDDLEWARE = [
@@ -154,16 +155,17 @@ def is_test():
         print("Using a default mongo database")
         return False
 
+DB = None
 if is_test():
-    db = 'test'
+    DB = 'test'
 else:
-    db = 'default'
+    DB = 'default'
 
 
 # establish connection with default or test database, depending on the management command, being run
 # note that this connection syntax is correct for mongoengine0.9-, but mongoengine0.10+ introduced slight changes
 mongoengine.connect(
-    db=MONGODB_DATABASES[db]['name'],
-    host=MONGODB_DATABASES[db]['host']
+    db=MONGODB_DATABASES[DB]['name'],
+    host=MONGODB_DATABASES[DB]['host']
 )
 
