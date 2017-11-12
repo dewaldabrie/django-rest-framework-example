@@ -40,7 +40,6 @@ class Command(BaseCommand):
                 c.pop('company')
                 # insert
                 bulk.find({"index": c["index"]}).upsert().replace_one(c)
-            print(company_records[0])
             # insert into database
             bulk.execute()
 

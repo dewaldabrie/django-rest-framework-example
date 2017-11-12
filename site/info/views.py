@@ -26,8 +26,6 @@ class CompanyViewSet(MongoModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         index = kwargs.get('index', None)
         company = Company.objects.get(index=index)
-        print(company)
-        print(dir(company))
         # if len(company) != 1:
         #     raise ValueError('Company with id %s does not exist.' % index)
         queryset = Person.objects.filter(company_id=index).all()
