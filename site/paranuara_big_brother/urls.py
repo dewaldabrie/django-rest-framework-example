@@ -18,7 +18,6 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 from info.views import *
-from .routers import HybridRouter
 from rest_framework import routers
 
 # We use a single global DRF Router that routes views from all apps in project
