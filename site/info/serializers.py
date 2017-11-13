@@ -33,11 +33,16 @@ class CrossPersonSerializer(mongoserlializers.DocumentSerializer):
         # split indices
         indices = map(int, self.context.get('indices').split(','))
         this_index = instance.index
-        other_index = list(set(indices) - set([this_index]))[0]
-        # find set of mutual friends
+        remaining_indices = set(indices) - set([this_index])
+
+        # get intersection of friends set amongst all persons
         this_friends = set([d['index'] for d in instance.friends])
-        other_friends = set([d['index'] for d in Person.objects.get(index=other_index).friends])
-        mutual_friends = list(this_friends.intersection(other_friends))
+        mutual_friends = this_friends
+        for other_index in remaining_indices:
+            # find set of mutual friends
+            other_friends = set([d['index'] for d in Person.objects.get(index=other_index).friends])
+            mutual_friends = this_friends.intersection(other_friends)
+
         # filter on brown eyes and still alive
         specific_mutual_friends = Person.objects.filter(
             has_died=False,
