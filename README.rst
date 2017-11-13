@@ -37,7 +37,16 @@ Browse to localhost:8000/api
 
 You can browse this api and interact with it or try the following urls:
 
-* localhost:8000/api/company/1
-* localhost:8000/api/person/0
-* localhost:8000/api/person/0,1
+* localhost:8000/api/company/1/
+* localhost:8000/api/person/0/
+* localhost:8000/api/person/0,1/
+
+Running the tests and checks
+----------------------------
+The tests and checks are configured in site/tox.ini. You can run the tests if
+you have tox installed::
+
+    $ pip install tox
+    $ cd site
+    $ tox
 

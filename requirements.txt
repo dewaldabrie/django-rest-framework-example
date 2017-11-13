@@ -4,3 +4,5 @@ markdown
 django-filter
 django-rest-framework-mongoengine
 mongoengine
+tox
+pylint
