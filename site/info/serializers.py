@@ -30,9 +30,11 @@ class CrossPersonSerializer(mongoserlializers.DocumentSerializer):
     friends_in_common = mongoserlializers.serializers.SerializerMethodField()
 
     def get_friends_in_common(self, instance):
+        # split indices
         indices = map(int, self.context.get('indices').split(','))
         this_index = instance.index
         other_index = list(set(indices) - set([this_index]))[0]
+        # find set of mutual friends
         this_friends = set([d['index'] for d in instance.friends])
         other_friends = set([d['index'] for d in Person.objects.get(index=other_index).friends])
         mutual_friends = list(this_friends.intersection(other_friends))
@@ -42,9 +44,8 @@ class CrossPersonSerializer(mongoserlializers.DocumentSerializer):
             eyeColor='brown',
             index__in=mutual_friends,
         ).all()
-        serializer = PersonShortSerializer(specific_mutual_friends, many=True, allow_empty=True)
-        return serializer.data
-
+        # use short serializer to only show the friends' names
+        return PersonShortSerializer(specific_mutual_friends, many=True).data
 
     class Meta:
         model = Person
